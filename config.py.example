@@ -1,0 +1,7 @@
+API_KEY = 'XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX'
+SECRET = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+
+COIN_TO_SELL = 'LBC'
+COIN_PAIR = 'BTC_' + COIN_TO_SELL
+THRESHOLD = 5000
+SLEEP_TIME = 30
