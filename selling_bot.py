@@ -6,12 +6,8 @@ from config import API_KEY, SECRET, COIN_TO_SELL, COIN_PAIR, THRESHOLD, SLEEP_TI
 
 
 
-polo = Poloniex(API_KEY, SECRET)
-
-prev_msg = ""
-
-while True:
-    # print('=========================')
+def sell(polo):
+    msg = ""
 
     # cancel order and check if there are coins to sell
     open_orders = polo.returnOpenOrders(COIN_PAIR)
@@ -41,8 +37,22 @@ while True:
         msg = 'sell {} {} at {}'.format(balance, COIN_TO_SELL, sell_rate)
         polo.sell(COIN_PAIR, sell_rate, balance)
 
-    if msg != prev_msg:
-        print('{}   {}'.format(datetime.datetime.now(), msg))
-    prev_msg = msg
+    return msg
+
+polo = Poloniex(API_KEY, SECRET)
+
+prev_msg = ""
+
+while True:
+    # print('=========================')
+    try:
+        msg = sell(polo)
+
+        if msg != prev_msg:
+            print('{}   {}'.format(datetime.datetime.now(), msg))
+        prev_msg = msg
+    except:
+        print('error. recreate polo.')
+        polo = Poloniex(API_KEY, SECRET)
 
     time.sleep(SLEEP_TIME)
