@@ -1,9 +1,8 @@
 from poloniex import Poloniex
-from decimal import *
+from decimal import Decimal
 import time
 import datetime
-from config import API_KEY, SECRET, COIN_TO_SELL, COIN_PAIR, THRESHOLD, SLEEP_TIME
-
+from config import *
 
 
 def sell(polo):
@@ -23,19 +22,21 @@ def sell(polo):
         asks = orders['asks']
         bids = orders['bids']
 
+        sell_rate = Decimal(MIN_PRICE)  # min sell rate
+        
         sum_amount = Decimal(0)
         for rate, amount in asks:
             sum_amount += Decimal(amount)
-            if sum_amount > THRESHOLD:  # sell at this rate
-                sell_rate = Decimal(rate) - Decimal('0.00000001')
+            proper_sell_rate = Decimal(rate) - Decimal('0.00000001')
+            sell_rate = max(sell_rate, proper_sell_rate)
+            if sum_amount > THRESHOLD:  # sum_amount may never be more than THRESHOLD
                 high_bid_rate = Decimal(bids[0][0])
                 if sell_rate == high_bid_rate:
                     sell_rate = sell_rate + Decimal('0.00000001')
                 break
-        sell_rate = str(sell_rate)
 
         msg = 'sell {} {} at {}'.format(balance, COIN_TO_SELL, sell_rate)
-        polo.sell(COIN_PAIR, sell_rate, balance)
+        polo.sell(COIN_PAIR, str(sell_rate), balance)
 
     return msg
 
