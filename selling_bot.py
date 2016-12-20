@@ -18,7 +18,7 @@ def sell(polo):
         msg = 'balance of {}: {}'.format(COIN_TO_SELL, balance)
     else:
         # sell all the coins
-        orders = polo.returnOrderBook(COIN_PAIR)
+        orders = polo.returnOrderBook(COIN_PAIR, depth=50)
         asks = orders['asks']
         bids = orders['bids']
 
