@@ -68,7 +68,7 @@ class CoinSeller:
 
         # print message
         if self.msg != self.prev_msg:
-            print('\033[2m{}\033[0m   {}'.format(datetime.datetime.now(), self.msg))
+            print('\033[2m{}\033[0m  {}'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), self.msg))
         self.prev_msg = self.msg
 
 
