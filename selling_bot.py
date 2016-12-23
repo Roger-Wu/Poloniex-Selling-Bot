@@ -35,6 +35,8 @@ class CoinSeller:
         self.amount_threshold = config['amount_threshold']
         self.min_price = config['min_price']
 
+        self.is_selling = False
+
     def sell(self):
         # cancel order and check if there are coins to sell
         open_orders = polo.returnOpenOrders(self.coin_pair)
@@ -44,6 +46,11 @@ class CoinSeller:
 
         # find a proper price and sell
         if Decimal(balance) == 0:
+            if self.is_selling:
+                # a fake "sold" message. TODO: check if the coins are really sold
+                self.msg = '\033[92m{}\033[0m sold!'.format(self.coin)
+            
+            self.is_selling = False
             self.msg = 'no \033[92m{}\033[0m to sell'.format(self.coin)
         else:
             orders = polo.returnOrderBook(self.coin_pair, depth=50)
@@ -63,8 +70,9 @@ class CoinSeller:
                         sell_rate = sell_rate + Decimal('0.00000001')
                     break
 
-            self.msg = 'place sell order: \033[96m{} \033[92m{}\033[0m at \033[96m{}\033[0m'.format(balance, self.coin, sell_rate)
             polo.sell(self.coin_pair, str(sell_rate), balance)
+            self.msg = 'place sell order: \033[96m{} \033[92m{}\033[0m at \033[96m{}\033[0m'.format(balance, self.coin, sell_rate)
+            self.is_selling = True
 
         # print message
         if self.msg != self.prev_msg:
