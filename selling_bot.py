@@ -18,7 +18,7 @@ def main():
             try:
                 coin_seller.sell()                
             except:
-                print('error. recreate polo.')
+                print('\033[91merror when selling {}. recreate polo.\033[0m'.format(coin_seller.coin))
                 polo = Poloniex(API_KEY, SECRET)
 
         time.sleep(SLEEP_TIME)
@@ -36,7 +36,6 @@ class CoinSeller:
         self.min_price = config['min_price']
 
     def sell(self):
-
         # cancel order and check if there are coins to sell
         open_orders = polo.returnOpenOrders(self.coin_pair)
         for open_order in open_orders:
@@ -45,7 +44,7 @@ class CoinSeller:
 
         # find a proper price and sell
         if Decimal(balance) == 0:
-            self.msg = 'balance of {}: {}'.format(self.coin, balance)
+            self.msg = 'no \033[92m{}\033[0m to sell'.format(self.coin)
         else:
             orders = polo.returnOrderBook(self.coin_pair, depth=50)
             asks = orders['asks']
@@ -64,13 +63,24 @@ class CoinSeller:
                         sell_rate = sell_rate + Decimal('0.00000001')
                     break
 
-            self.msg = 'sell {} {} at {}'.format(balance, self.coin, sell_rate)
+            self.msg = 'place sell order: \033[96m{} \033[92m{}\033[0m at \033[96m{}\033[0m'.format(balance, self.coin, sell_rate)
             polo.sell(self.coin_pair, str(sell_rate), balance)
 
         # print message
         if self.msg != self.prev_msg:
-            print('{}   {}'.format(datetime.datetime.now(), self.msg))
+            print('\033[2m{}\033[0m   {}'.format(datetime.datetime.now(), self.msg))
         self.prev_msg = self.msg
+
+
+# class bcolors:
+#     HEADER = '\033[95m'
+#     OKBLUE = '\033[94m'
+#     OKGREEN = '\033[92m'
+#     WARNING = '\033[93m'
+#     FAIL = '\033[91m'
+#     ENDC = '\033[0m'
+#     BOLD = '\033[1m'
+#     UNDERLINE = '\033[4m'
 
 
 if __name__ == '__main__':
