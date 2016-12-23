@@ -1,7 +1,9 @@
 API_KEY = 'XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX'
 SECRET = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
-COIN_TO_SELL = 'LBC'
-COIN_PAIR = 'BTC_' + COIN_TO_SELL
-THRESHOLD = 5000
 SLEEP_TIME = 30
+
+sell_coin_configs = [
+	{'coin': 'LBC', 'coin_pair': 'BTC_LBC', 'amount_threshold': 5000, 'min_price': '0.00001399'},
+	{'coin': 'ZEC', 'coin_pair': 'BTC_ZEC', 'amount_threshold': 15, 'min_price': '0.0499'}
+]
