@@ -17,8 +17,9 @@ def main():
         for coin_seller in coin_sellers:
             try:
                 coin_seller.sell()                
-            except:
-                print('\033[91merror when selling {}. recreate polo.\033[0m'.format(coin_seller.coin))
+            except Exception as e:
+                print(e)
+                print('\033[91m{}  error when selling {}. recreate polo.\033[0m'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), coin_seller.coin))
                 polo = Poloniex(API_KEY, SECRET)
 
         time.sleep(SLEEP_TIME)
@@ -47,11 +48,11 @@ class CoinSeller:
         # find a proper price and sell
         if Decimal(balance) == 0:
             if self.is_selling:
-                # a fake "sold" message. TODO: check if the coins are really sold
+                # a lazy "sold" message. TODO: check if the coins are sold or transfered
                 self.msg = '\033[92m{}\033[0m sold!'.format(self.coin)
-            
-            self.is_selling = False
-            self.msg = 'no \033[92m{}\033[0m to sell'.format(self.coin)
+                self.is_selling = False
+            else:
+                self.msg = 'no \033[92m{}\033[0m to sell'.format(self.coin)
         else:
             orders = polo.returnOrderBook(self.coin_pair, depth=50)
             asks = orders['asks']
